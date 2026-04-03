@@ -15,7 +15,7 @@ namespace Oxide.Plugins
 {
     using ClansEx;
 
-    [Info("Clans", "k1lly0u", "0.2.8")]
+    [Info("Clans", "k1lly0u", "0.2.9")]
     public class Clans : CovalencePlugin
     {
         #region Fields        
@@ -73,6 +73,22 @@ namespace Oxide.Plugins
         }
 
         private void OnUserDisconnected(IPlayer player) => storedData?.FindClanByID(player.Id)?.OnPlayerDisconnected(player);
+
+        #if RUST
+        private void OnNewSave(string filename)
+        {
+            if (!configData.Options.WipeClansOnServerWipe)
+                return;
+
+            if (storedData == null)
+                storedData = new StoredData();
+
+            if (!string.IsNullOrEmpty(storedData.LastProcessedWipeId) && string.Equals(storedData.LastProcessedWipeId, filename, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            WipeClanData(filename);
+        }
+        #endif
 
         private void Unload()
         {
@@ -216,6 +232,23 @@ namespace Oxide.Plugins
             return unixTimeStamp > MaxUnixSeconds
                 ? Epoch.AddMilliseconds(unixTimeStamp)
                 : Epoch.AddSeconds(unixTimeStamp);
+        }
+
+        private void WipeClanData(string wipeId)
+        {
+            int clanCount = storedData?.clans?.Count ?? 0;
+
+            storedData = new StoredData
+            {
+                LastProcessedWipeId = wipeId ?? string.Empty
+            };
+
+            SaveData();
+
+            Puts($"Clan wipe-on-server-wipe is enabled. Cleared {clanCount} clan(s) for save '{wipeId}'.");
+
+            if (configData.Options.LogChanges)
+                LogToFile(Title, $"Server wipe detected. Cleared {clanCount} clan(s). Save: {wipeId}", this);
         }
         #endregion
 
@@ -2022,6 +2055,9 @@ namespace Oxide.Plugins
 
                 [JsonProperty(PropertyName = "Data save interval (seconds)")]
                 public int SaveInterval { get; set; }
+
+                [JsonProperty(PropertyName = "Wipe clans on server wipe")]
+                public bool WipeClansOnServerWipe { get; set; }
             }
 
             public class Range
@@ -2086,6 +2122,7 @@ namespace Oxide.Plugins
                 {
                     LogChanges = false,
                     SaveInterval = 900,
+                    WipeClansOnServerWipe = false,
                 },               
                 Purge = new ConfigData.PurgeOptions
                 {
@@ -2206,6 +2243,8 @@ namespace Oxide.Plugins
             public Hash<string, Clan> clans = new Hash<string, Clan>();
 
             public Hash<string, List<string>> playerInvites = new Hash<string, List<string>>();
+
+            public string LastProcessedWipeId = string.Empty;
 
             [JsonIgnore]
             private Hash<string, string> playerLookup = new Hash<string, string>();
