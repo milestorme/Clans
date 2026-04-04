@@ -80,26 +80,97 @@ Enhanced version of the classic **Clans** plugin by k1lly0u, updated for modern 
 
 ## 📜 Commands
 
-### Player Commands
+### 👥 Core Clan Commands
 
-```
-/clan create <tag> <description>
-/clan invite <player>
-/clan accept <tag>
-/clan leave
-/clan kick <player>
-/clan promote <player>
-/clan demote <player>
-/clan disband forever
-/clanhelp
-```
+/clan  
+→ Shows your clan information
 
-### Chat Channels
+/clan create <tag> <description>  
+→ Create a new clan
 
-```
-/c <message>      → Clan chat
-/a <message>      → Alliance chat
-```
+/clan leave  
+→ Leave your current clan
+
+/clan disband forever  
+→ Disband your clan (owner only)
+
+
+#### 📩 Invites
+
+/clan invite <player>  
+→ Invite a player to your clan
+
+/clan withdraw <player>  
+→ Withdraw a pending invite
+
+/clan accept <tag>  
+→ Accept a clan invite
+
+/clan reject <tag>  
+→ Reject a clan invite
+
+
+#### ⚔️ Management
+
+/clan kick <player>  
+→ Kick a member from the clan
+
+/clan promote <player>  
+→ Promote a member (owner only)
+
+/clan demote <player>  
+→ Demote a member (owner only)
+
+
+#### 🎨 Customization
+
+/clan tagcolor <hex>  
+→ Set clan tag color (if enabled)
+
+/clan tagcolor reset  
+→ Reset clan tag color to default
+
+
+---
+
+### 💬 Chat Commands
+
+/c <message>  
+→ Send a message to clan chat
+
+/a <message>  
+→ Send a message to alliance chat
+
+
+---
+
+### 📘 Info & Help
+
+/clanhelp  
+→ Displays all available clan commands
+
+/cinfo <tag>  
+→ View detailed information about a clan
+
+
+---
+
+### 🤝 Alliance Commands
+
+/ally invite <tag>  
+→ Send an alliance request to another clan
+
+/ally withdraw <tag>  
+→ Withdraw a sent alliance request
+
+/ally accept <tag>  
+→ Accept an alliance request
+
+/ally reject <tag>  
+→ Reject an alliance request
+
+/ally revoke <tag>  
+→ Remove an existing alliance
 
 ---
 
